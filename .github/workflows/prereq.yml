@@ -59,12 +59,12 @@ jobs:
     - name: OpenSSL
       run: |
         chmod -R 777 ~/x-tools
-        wget -nv https://www.openssl.org/source/openssl-1.1.1g.tar.gz
-        tar -xzf openssl-1.1.1g.tar.gz
-        cd openssl-1.1.1g 
+        wget -nv https://www.openssl.org/source/openssl-1.1.1h.tar.gz
+        tar -xzf openssl-1.1.1h.tar.gz
+        cd openssl-1.1.1h 
         export CROSS_DIR=~/x-tools/arm-kobo-linux-gnueabihf/bin 
         export SYSROOT=~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/sysroot 
-        export CFLAGS="-O3 -march=armv7-a -mfpu=neon -mfloat-abi=hard -D__arm__ -D__ARM_NEON__ -fPIC -fno-omit-frame-pointer -funwind-tables -Wl,--no-merge-exidx-entries" 
+        export CFLAGS="-O3 -march=armv7-a -mtune=cortex-a8 -mfpu=neon -mfloat-abi=hard -D__arm__ -D__ARM_NEON__ -fPIC -fno-omit-frame-pointer -funwind-tables -Wl,--no-merge-exidx-entries" 
         ./Configure linux-armv4 no-comp --prefix=${SYSROOT}/usr --openssldir=${SYSROOT}/usr --cross-compile-prefix=$CROSS_DIR/arm-kobo-linux-gnueabihf-
         make clean && make -j5 > /dev/null && make install > /dev/null
     - name: Qt
