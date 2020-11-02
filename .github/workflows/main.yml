@@ -44,7 +44,7 @@ jobs:
           chmod -R 777 ~/qt-bin
 
           
-          #export QTDIR=qt-everywhere-src-5.15.1 
+        #  export QTDIR=qt-everywhere-src-5.15.1 
           export PATH=~/x-tools/arm-kobo-linux-gnueabihf/bin:$PATH
           export PATH=~/qt-bin/qt-linux-5.15.1-kobo/bin:$PATH 
           export SYSROOT=~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/sysroot 
@@ -54,11 +54,12 @@ jobs:
           cd $GITHUB_WORKSPACE
           qmake CONFIG+=kobo && make -j5
           
-          cd /home/runner/qt-bin
-          mv ~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/sysroot/usr/lib/libcrypto.so.1.1 qt-linux-5.15.1-kobo/lib/
-          mv ~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/sysroot/usr/lib/libssl.so.1.1 qt-linux-5.15.1-kobo/lib/
-          mv ~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/lib/libstdc++.so.6 qt-linux-5.15.1-kobo/lib/
-          zip -r $GITHUB_WORKSPACE/libs.zip /home/runner/qt-bin/qt-linux-5.15.1-kobo/lib/libQt5Svg.so /home/runner/qt-bin/qt-linux-5.15.1-kobo/lib/libQt5Widgets.so /home/runner/qt-bin/qt-linux-5.15.1-kobo/lib/libQt5Gui.so /home/runner/qt-bin/qt-linux-5.15.1-kobo/lib/libQt5Network.so /home/runner/qt-bin/qt-linux-5.15.1-kobo/lib/libQt5Core.so qt-linux-5.15.1-kobo/lib/libcrypto.so.1.1 qt-linux-5.15.1-kobo/lib/libssl.so.1.1 qt-linux-5.15.1-kobo/lib/libstdc++.so.6 qt-linux-5.15.1-kobo/qml/ qt-linux-5.15.1-kobo/plugins/
+        ### Packing required libs
+         cd /home/runner/qt-bin
+         mv ~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/sysroot/usr/lib/libcrypto.so.1.1 qt-linux-5.15.1-kobo/lib/
+         mv ~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/sysroot/usr/lib/libssl.so.1.1 qt-linux-5.15.1-kobo/lib/
+         mv ~/x-tools/arm-kobo-linux-gnueabihf/arm-kobo-linux-gnueabihf/lib/libstdc++.so.6 qt-linux-5.15.1-kobo/lib/
+         zip -r $GITHUB_WORKSPACE/libs.zip qt-linux-5.15.1-kobo/lib/libQt5Svg.so qt-linux-5.15.1-kobo/lib/libQt5Widgets.so qt-linux-5.15.1-kobo/lib/libQt5Gui.so qt-linux-5.15.1-kobo/lib/libQt5Network.so qt-linux-5.15.1-kobo/lib/libQt5Core.so qt-linux-5.15.1-kobo/lib/libcrypto.so.1.1 qt-linux-5.15.1-kobo/lib/libssl.so.1.1 qt-linux-5.15.1-kobo/lib/libstdc++.so.6 qt-linux-5.15.1-kobo/lib/libQt5Qml*.so qt-linux-5.15.1-kobo/qml/ qt-linux-5.15.1-kobo/plugins/
           
       - name: "Get upload_url"
         run: echo "::set-output name=upload_url::https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)/assets{?name,label}"  
@@ -73,6 +74,8 @@ jobs:
           asset_path: UltimateMangaReader
           asset_name: UltimateMangaReader
           asset_content_type: application/octet-stream
+          
+        ### Uploading required libs
       - name: Upload Release Asset
         id: upload-release-asset2
         uses: actions/upload-release-asset@v1
